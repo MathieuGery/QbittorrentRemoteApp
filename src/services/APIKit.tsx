@@ -10,7 +10,7 @@
 import axios from 'axios';
 
 const client = axios.create({
-  baseURL: 'https://qbittorrent.gideon.ovh/api',
+  baseURL: 'https://qbittorrent.gideon.ovh/api/v2',
 });
 
 const request = (options) => {
