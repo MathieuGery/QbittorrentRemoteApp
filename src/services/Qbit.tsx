@@ -1,17 +1,14 @@
 import request from './APIKit';
 
 async function login(data) {
+  var bodyFormData = new FormData();
+  bodyFormData.append('username', data.username, 'password', data.password)
   return request({
     url: '/auth/login',
-    method: 'POST',
-    data,
+    method: 'post',
+    params: bodyFormData
   });
 }
-const authServices = {
-  login,
-};
-
-
 
 async function getApplicationVersion() {
   return request({
@@ -67,8 +64,8 @@ async function getDefaultSavePath() {
 async function getLog(normal = true, info = true, warning = true, critical = true, last_know_id = -1) {
   return request({
     url: '/log/main',
-    method: 'post',
-    data:{
+    method: 'get',
+    params:{
       normal: normal,
       info: info,
       warning: warning,
@@ -81,8 +78,8 @@ async function getLog(normal = true, info = true, warning = true, critical = tru
 async function getPeerLog(last_known_id=-1) {
   return request({
     url: '/log/peers',
-    method: 'post',
-    data:{
+    method: 'get',
+    params:{
       last_known_id: last_known_id,
     }
   });
@@ -90,16 +87,19 @@ async function getPeerLog(last_known_id=-1) {
 
 async function getMainData(rid=0) {
   return request({
-    url: '/sync/maindata?rid=${rid}',
+    url: '/sync/maindata',
     method: 'get',
+    params: {
+      rid: rid,
+    }
   });
 }
 
 async function getTorrentPeersData(hash, rid=0) {
   return request({
     url: '/sync/torrentPeers',
-    method: 'post',
-    data:{
+    method: 'get',
+    params:{
       hash: hash,
       rid: rid,
     }
@@ -137,9 +137,9 @@ async function getGlobalDownloadLimit() {
 async function setGlobalDownloadLimit(limit) {
   return request({
     url: '/transfer/setDownloadLimit',
-    method: 'post',
-    data:{
-      limit: limit*1024
+    method: 'get',
+    params:{
+      limit: 0*1024
     }
   });
 }
@@ -154,8 +154,8 @@ async function getGlobalUploadLimit() {
 async function setGlobalUploadLimit(limit) {
   return request({
     url: '/transfer/setUploadLimit',
-    method: 'post',
-    data:{
+    method: 'get',
+    params: {
       limit: limit*1024
     }
   });
@@ -168,15 +168,8 @@ async function getTorrentList() {
   return request({
     url: '/torrents/info',
     method: 'get',
-    data: {
-    filter: '',
-    category: '',
-    tag: '',
-    sort: '',
-    serverse: '',
-    limit: '',
-    offset: '',
-    hashes: '',
+    params: {
+    hashes: '63424424bebd54cfb4879eead7eca57d80316dd2',
     }
   });
 }
@@ -187,8 +180,8 @@ async function getTorrentList() {
 async function getTorrentGenericProperties(hash) {
   return request({
     url: '/torrents/properties',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       hash: hash,
     }
   });
@@ -198,8 +191,8 @@ async function getTorrentGenericProperties(hash) {
 async function getTorrentTrackers(hash) {
   return request({
     url: '/torrents/trackers',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       hash: hash,
     }
   });
@@ -208,12 +201,239 @@ async function getTorrentTrackers(hash) {
 async function getTorrentWebSeeds(hash) {
   return request({
     url: '/torrents/webseeds',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       hash: hash,
     }
   });
 }
 
+async function getTorrentContents(hash, indexes=null) {
+  return request({
+    url : '/torrents/files',
+    method: 'get',
+    params: {
+      hash: hash,
+      indexes: indexes,
+    }
+  });
+}
+
+
+async function getTorrentPiecesStates(hash) {
+  return request({
+    url : '/torrents/pieceStates',
+    method: 'get',
+    params: {
+      hash: hash,
+    }
+  });
+}
+
+async function getTorrentPiecesHashes(hash)
+//The hashes of the torrents you want to pause. hashes can contain multiple hashes separated by |, to pause multiple torrents, or set to all, to pause all torrents.
+{
+  return request({
+    url : '/torrents/pieceHashes',
+    method: 'get',
+    params: {
+      hash: hash,
+    }
+  });
+}
+
+async function pauseTorrents(hashes) {
+  return request({
+    url : '/torrents/pause',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+async function resumeTorrents(hashes) 
+//The hashes of the torrents you want to resume. hashes can contain multiple hashes separated by |, to resume multiple torrents, or set to all, to resume all torrents.
+{
+  return request({
+    url : '/torrents/resume',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+async function deleteTorrent(hashes, deleteFiles)
+//deleteFiles	If set to true, the downloaded data will also be deleted
+ {
+  return request({
+    url : '/torrents/delete',
+    method: 'get',
+    params: {
+      hashes: hashes,
+      deleteFiles: deleteFiles,
+    }
+  });
+}
+
+
+async function recheckTorrrents(hashes) {
+  return request({
+    url : '/torrents/recheck',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+async function reannouceTorrents(hashes) {
+  return request({
+    url : '/torrents/reannounce',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+//TODO add torrent
+//TODO add tracker to torrent 
+
+
+
+async function editTracker(hash, origUrl, newUrl) {
+  return request({
+    url: '/torrents/editTracker',
+    method: 'get',
+    params: {
+      hash : hash,
+      origUrl: origUrl,
+      newUrl: newUrl
+    }
+  });
+}
+
+async function removeTrackers(hash, urls) {
+  return request({
+    url: '/torrent/removeTrackers',
+    method: 'get',
+    params: {
+      hash: hash,
+      urls: urls
+    }
+  });
+}
+
+async function addPeers(hashes, peers) {
+  return request({
+    url: '/torrent/addPeers',
+    method: 'get',
+    params: {
+      hashes: hashes,
+      peers: peers,
+    }
+  });
+}
+
+async function increaseTorrentPriority(hashes) {
+  return request({
+    url: '/torrent/increasePrio',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+
+async function decreaseTorrentPriority(hashes) {
+  return request({
+    url: '/torrent/decreasePrio',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+
+
+async function maximalTorrentPriority(hashes) {
+  return request({
+    url: '/torrent/topPrio',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+
+async function minimalTorrentPriority(hashes) {
+  return request({
+    url: '/torrent/bottomPrio',
+    method: 'get',
+    params: {
+      hashes: hashes,
+    }
+  });
+}
+
+async function setFilePriority(hashes, id, priority) {
+  return request({
+    url: '/torrent/filePrio',
+    method: 'get',
+    params: {
+      hashes: hashes,
+      id: id,
+      priority: priority,
+    }
+  });
+}
+
+
+
+//TODO Get torrent download limit
+//TODO Set torrent download limit
+//TODO Set torrent share limit
+
+
+
+
+
+
+
+const qbittorrentServices = {
+  login,
+  getTorrentList,
+  getGlobalTransferInfo,
+  getAPIVersion,
+  toggleAlernativeSpeedLimits,
+  pauseTorrents,
+  recheckTorrrents,
+  reannouceTorrents,
+  getTorrentPiecesStates,
+  getTorrentContents,
+  deleteTorrent,
+  getTorrentPiecesHashes,
+  resumeTorrents,
+  getTorrentWebSeeds,
+  getTorrentTrackers,
+  getTorrentGenericProperties,
+  getAlternativeSpeedLimitsState,
+  setGlobalUploadLimit,
+  getGlobalUploadLimit,
+  setGlobalDownloadLimit,
+  getGlobalDownloadLimit,
+  getTorrentPeersData,
+  getMainData,
+  getPeerLog,
+  getLog,
+  getDefaultSavePath,
+  getBuildInfo,
+  getApplicationPreferences,
+};
 
 export default qbittorrentServices;

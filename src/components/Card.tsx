@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph, ProgressBar, Colors, Surface } from 'react-native-paper';
+import qbittorrentService from '../services/Qbit';
 
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
@@ -8,7 +9,23 @@ type Props = {
   children: React.ReactNode;
 };
 
-const TorrentCard = ({ children }: Props) => (
+const TorrentCard = ({ children }: Props) => {
+  const _onPressed = async () => {
+    await qbittorrentService.login(
+      {username: "", password: ""},
+    )
+      .then((data) => console.log(data))
+      .catch((error) => {
+        alert(error)});
+  }; 
+
+  const _onPressed2 = async () => {
+    await qbittorrentService.getAPIVersion()
+    .then((data) => console.log(data))
+      .catch((error) => {
+        alert(error)});
+  }; 
+  return (
     <Card style={styles.card}>
     <Card.Title title="Card Title" subtitle="Card Subtitle" left={LeftContent}/>
     <Card.Content>
@@ -24,8 +41,15 @@ const TorrentCard = ({ children }: Props) => (
       </Paragraph>
     </Card.Content>
     <ProgressBar progress={0.75} color={Colors.black} />
+    <Button mode="contained" onPress={_onPressed}>
+    Connect
+  </Button>
+   <Button mode="contained" onPress={_onPressed2}>
+    get torrents list 
+  </Button>
   </Card>
-);
+  )
+  };
 
 const styles = StyleSheet.create({
     card: {
