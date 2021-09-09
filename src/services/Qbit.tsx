@@ -139,7 +139,7 @@ async function setGlobalDownloadLimit(limit) {
     url: '/transfer/setDownloadLimit',
     method: 'get',
     params:{
-      limit: 0*1024
+      limit: limit*1024
     }
   });
 }
@@ -164,12 +164,12 @@ async function setGlobalUploadLimit(limit) {
 
 
 //TODO upgrade parameters torrent list
-async function getTorrentList() {
+async function getTorrentList(hashes) {
   return request({
     url: '/torrents/info',
     method: 'get',
     params: {
-    hashes: '63424424bebd54cfb4879eead7eca57d80316dd2',
+    hashes: hashes,
     }
   });
 }
