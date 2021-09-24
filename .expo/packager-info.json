@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19000,
-  "webpackServerPort": 19006,
-  "expoServerNgrokUrl": "https://jt-arw.anonymous.qbittorrentremoteapp.exp.direct",
-  "packagerNgrokUrl": "https://packager.jt-arw.anonymous.qbittorrentremoteapp.exp.direct",
-  "ngrokPid": 1561
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }
