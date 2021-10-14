@@ -1,6 +1,7 @@
 import request from './APIKit';
+import axios from 'axios';
 
-async function login(data: { username: any; password: any; }) {
+async function login(data: { username: string; password: string; }) {
   return request({
     url: '/auth/login',
     method: 'get',
@@ -185,6 +186,15 @@ async function getActiveTorrentList() {
   });
 }
 
+async function getDownloadingTorrentList() {
+  return request({
+    url: '/torrents/info',
+    method: 'get',
+    params: {
+      filter: 'downloading',
+    }
+  });
+}
 
 
 
@@ -410,6 +420,8 @@ async function setFilePriority(hashes, id, priority) {
 //TODO Set torrent download limit
 //TODO Set torrent share limit
 
+
+
 async function addTorrent(urls, category, skip_checking, paused) {
   return request({
     url: '/torrents/add',
@@ -421,8 +433,12 @@ async function addTorrent(urls, category, skip_checking, paused) {
   });
 }
 
-
-
+async function getAllCategories() {
+  return request({
+    url: '/torrents/categories',
+    method: 'get',
+  });
+}
 
 
 const qbittorrentServices = {
@@ -456,6 +472,8 @@ const qbittorrentServices = {
   getApplicationPreferences,
   addTorrent,
   getActiveTorrentList,
+  getDownloadingTorrentList,
+  getAllCategories
 };
 
 export default qbittorrentServices;

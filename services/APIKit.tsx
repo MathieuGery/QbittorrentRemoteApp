@@ -8,10 +8,11 @@
  */
 
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 
 const client = axios.create({
-  baseURL: '',
+  baseURL: "qbtURL"+ '/api/v2',
 });
 
 const request = (options) => {

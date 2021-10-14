@@ -16,7 +16,6 @@ export default function TabTwoScreen() {
 
     const fetchMyAPI = async () => {
       await qbittorrentServices.getActiveTorrentList().then((data) => {
-        console.log(data);
         setTorrentList(data)
       }).catch((err) => console.log(err))
     }
@@ -30,6 +29,7 @@ export default function TabTwoScreen() {
         data={torrentList}
         renderItem={renderItem}
         keyExtractor={item => item.hash}
+        contentContainerStyle={{ paddingBottom: 30 }}
       />
     </SafeAreaView>
   );
@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '100%'
+    width: '100%',
   },
   flatlist: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'white'
+    backgroundColor: 'black',
   }
 });
