@@ -4,16 +4,15 @@ import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import TorrentCard from '../components/TorrentCard';
 import qbittorrentServices from '../services/Qbit';
+import { RootTabScreenProps } from '../types';
 
-export default function TabTwoScreen() {
+export default function TabTwoScreen({ navigation }: RootTabScreenProps<'TabTwo'>) {
   const [torrentList, setTorrentList] = React.useState([]);
-
   const renderItem = ({ item }) => (
     <TorrentCard data={item} />
   );
 
   useEffect(() => {
-
     const fetchMyAPI = async () => {
       await qbittorrentServices.getActiveTorrentList().then((data) => {
         setTorrentList(data)
@@ -21,6 +20,8 @@ export default function TabTwoScreen() {
     }
     setInterval(() => { fetchMyAPI() }, 1000)
   }, []);
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>

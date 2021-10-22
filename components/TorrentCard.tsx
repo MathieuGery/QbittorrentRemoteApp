@@ -19,7 +19,7 @@ const TorrentCard = (props) => {
   const Download = () => {
     if (props.data.dlspeed) {
       return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row',marginLeft:5 }}>
           <Text style={{ color: 'white' }}>{FormatBytes(props.data.dlspeed)}</Text>
           <View style={styles.triangleDown} />
         </View>
@@ -51,7 +51,7 @@ const TorrentCard = (props) => {
           </View>
           <ProgressBar progress={props.data.progress} color={Colors.blue100} style={{ marginVertical: 5, borderRadius: 5 }} />
           <View style={{ flexDirection: 'row-reverse' }}>
-            <View style={{ position: 'absolute' }}>
+            <View style={{ position: 'absolute', flexDirection:'row' }}>
               <Upload />
               <Download />
             </View>

@@ -1,6 +1,6 @@
-import { StatusBar, StyleSheet, View, Text, Alert, Dimensions } from 'react-native';
-import React from 'react';
-import { Menu, Provider } from 'react-native-paper';
+import { StatusBar, StyleSheet, View, Text, Alert, Dimensions, TextInput } from 'react-native';
+import React, { useEffect } from 'react';
+import { Menu, Provider, IconButton, Colors, FAB } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import useCachedResources from './hooks/useCachedResources';
@@ -8,32 +8,38 @@ import TabOneScreen from './screens/TabOneScreen';
 import TabTwoScreen from './screens/TabTwoScreen';
 import LoginScreen from './screens/LoginScreen';
 import DownloadingScreen from './screens/DownloadingSreen';
-import { IconButton, Colors, FAB } from 'react-native-paper';
 import qbittorrentServices from './services/Qbit';
 import FormatBytes from './services/FormatBytes';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as SecureStore from 'expo-secure-store';
-
+import * as Linking from 'expo-linking';
 
 const Tab = createMaterialTopTabNavigator();
 const login = async () => {
-  await qbittorrentServices.login({ username: SecureStore.getItemAsync('username'), password: await SecureStore.getItemAsync('password') })
+  await qbittorrentServices.login({ username: await SecureStore.getItemAsync('username'), password: await SecureStore.getItemAsync('password') })
 }
 login()
 
+Linking.canOpenURL('')
+
+
 export default function App() {
-  const [Download, setDownload] = React.useState(0)
-  const [upLoad, setUpload] = React.useState(0)
+  // const [visible, setVisible] = React.useState(false);
+  const [Download, setDownload] = React.useState(0);
+  const [upLoad, setUpload] = React.useState(0);
   const isLoadingComplete = useCachedResources();
-  const [category, setCategory] = React.useState("")
-  const getDownload = setInterval(async () => {
-    await qbittorrentServices.getGlobalTransferInfo().then((data) => { setDownload(data.dl_info_speed), setUpload(data.up_info_speed) })
-  }, 1000)
-  const CategoryMenu = async () => {
-    await qbittorrentServices.getAllCategories().then((data) => setCategory(data))
-    console.log(category)
-  }
+  const [category, setCategory] = React.useState("");
+  const [allCategories, setAllCategories] = React.useState([]);
+  useEffect(() => {
+    const getDownload = async () => {
+      await qbittorrentServices.getGlobalTransferInfo().then((data) => { setDownload(data.dl_info_speed), setUpload(data.up_info_speed) })
+    }
+    setInterval(() => { getDownload() }, 1000)
+  }, [])
+  // const fechMyCategories = async () => {
+  //   await qbittorrentServices.getAllCategories().then((data) => { setAllCategories(data), setVisible(true) })
+  // }
   async function uploadTorrent() {
     const doc = await DocumentPicker.getDocumentAsync()
     const data = await FileSystem.getInfoAsync(FileSystem.cacheDirectory + "/DocumentPicker/" + (doc.uri).split('/DocumentPicker/')[1])
@@ -74,6 +80,7 @@ export default function App() {
           </View> */}
         {/* </View> */}
         <FAB icon="plus" onPress={async () => { await uploadTorrent().then((data) => Alert.alert('', data)) }} style={{ position: 'absolute', bottom: 20, right: 0, backgroundColor: '#219ebc' }} />
+        {/* <FAB icon="plus" onPress={fechMyCategories} style={{ position: 'absolute', bottom: 20, right: 0, backgroundColor: '#219ebc' }} /> */}
         <StatusBar barStyle={'light-content'} backgroundColor={'black'} hidden={false} translucent />
       </NavigationContainer>
     );
